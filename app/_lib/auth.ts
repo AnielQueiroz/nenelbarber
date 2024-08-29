@@ -1,0 +1,30 @@
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { db } from "./prisma"
+import GoogleProvider from "next-auth/providers/google"
+import { Adapter } from "next-auth/adapters"
+import { AuthOptions } from "next-auth"
+
+export const authOptions: AuthOptions = {
+    // Adapter
+    adapter: PrismaAdapter(db) as Adapter,
+
+    // Configure one or more authentication providers
+    providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+        })
+    ],
+    debug: true,
+    callbacks: {
+        async session({ session, user }) {
+            session.user = {
+                ...session.user,
+                id: user.id,
+            } as any
+
+            return session
+        },
+    },
+    secret: process.env.NEXT_AUTH_SECRET
+}
