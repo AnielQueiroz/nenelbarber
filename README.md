@@ -19,7 +19,7 @@ DATABASE_URL="databaseurl"
 GOOGLE_CLIENT_ID="googleclientid"
 GOOGLE_CLIENT_SECRET="googleclientsecret"
 
-NEXT_AUTH_SECRET="nenel-eh-mto-lindo"
+NEXT_AUTH_SECRET="nextauthsecret"
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
