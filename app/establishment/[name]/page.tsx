@@ -32,7 +32,10 @@ const Establishment = async ({ params }: any) => {
   const session = await getServerSession(authOptions)
   // console.log(session)
 
-  const bookings = await getUserBookings({ userId: (session?.user as any).id })
+  const bookings = await getUserBookings({
+    userId: (session?.user as any).id,
+    domain: params.name,
+  })
 
   return (
     <div>

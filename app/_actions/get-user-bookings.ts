@@ -1,13 +1,18 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { db } from "../_lib/prisma"
 
 interface GetUserBookingsProps {
   userId: string
+  domain: string
 }
 
-export const getUserBookings = ({ userId }: GetUserBookingsProps) => {
-  return db.booking.findMany({
+export const getUserBookings = async ({
+  userId,
+  domain,
+}: GetUserBookingsProps) => {
+  await db.booking.findMany({
     where: {
       userId: userId,
       date: {
@@ -25,4 +30,7 @@ export const getUserBookings = ({ userId }: GetUserBookingsProps) => {
       date: "asc",
     },
   })
+
+  revalidatePath(`/establishment/${domain}`)
+  revalidatePath(`/establishment/${domain}/bookings`)
 }
