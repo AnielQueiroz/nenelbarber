@@ -36,6 +36,7 @@ const Establishment = async ({ params }: any) => {
     userId: (session?.user as any)?.id,
     domain: params.name,
     uuid: establishment.id,
+    status: "confirmed",
   })
 
   return (

@@ -4,49 +4,39 @@ import { db } from "@/app/_lib/prisma"
 import { authOptions } from "@/app/_lib/auth"
 import SignInDialogClientWrapper from "@/app/_components/sign-in-wrapper"
 import BookingItem from "@/app/_components/booking-item"
+import { getEstablishment } from "@/app/_actions/get-establishment"
+import { notFound } from "next/navigation"
+import { getUserBookings } from "@/app/_actions/get-user-bookings"
 
-const Bookings = async () => {
+type Props = {
+  params: {
+    name: string
+  }
+}
+
+const Bookings = async ({ params }: Props) => {
+  const establishment = await getEstablishment({ subdomain: params.name })
+
+  if (!establishment) return notFound()
+
   const session = await getServerSession(authOptions)
+
   let concludedBookings: any[] = []
   let confirmedBookings: any[] = []
 
   if (session && session.user) {
-    confirmedBookings = await db.booking.findMany({
-      where: {
-        userId: (session?.user as any).id,
-        date: {
-          gte: new Date(),
-        },
-      },
-      include: {
-        service: {
-          include: {
-            barbershop: true,
-          },
-        },
-      },
-      orderBy: {
-        date: "asc",
-      },
+    confirmedBookings = await getUserBookings({
+      userId: (session?.user as any)?.id,
+      domain: params.name,
+      uuid: establishment.id,
+      status: "confirmed",
     })
 
-    concludedBookings = await db.booking.findMany({
-      where: {
-        userId: (session?.user as any).id,
-        date: {
-          lte: new Date(),
-        },
-      },
-      include: {
-        service: {
-          include: {
-            barbershop: true,
-          },
-        },
-      },
-      orderBy: {
-        date: "asc",
-      },
+    concludedBookings = await getUserBookings({
+      userId: (session?.user as any)?.id,
+      domain: params.name,
+      uuid: establishment.id,
+      status: "concluded",
     })
   }
 

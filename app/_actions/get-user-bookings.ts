@@ -7,21 +7,33 @@ interface GetUserBookingsProps {
   userId: string
   domain: string
   uuid: string
+  status: string
 }
 
 export const getUserBookings = async ({
   userId,
   domain,
   uuid,
+  status,
 }: GetUserBookingsProps) => {
-  if (!userId) return []
+  if (!userId || !uuid) return []
+
+  let date
+
+  if (status === "concluded") {
+    date = {
+      lte: new Date(),
+    }
+  } else if (status === "confirmed") {
+    date = {
+      gte: new Date(),
+    }
+  }
 
   const userBookings = await db.booking.findMany({
     where: {
       userId: userId,
-      date: {
-        gte: new Date(), // Filtrar bookings futuros
-      },
+      date: date,
       service: {
         barbershop: {
           id: uuid, // Filtrando pela UUID da barbershop
