@@ -12,7 +12,7 @@ export const getUserBookings = async ({
   userId,
   domain,
 }: GetUserBookingsProps) => {
-  await db.booking.findMany({
+  const userBookings = await db.booking.findMany({
     where: {
       userId: userId,
       date: {
@@ -33,4 +33,6 @@ export const getUserBookings = async ({
 
   revalidatePath(`/establishment/${domain}`)
   revalidatePath(`/establishment/${domain}/bookings`)
+
+  return userBookings
 }
