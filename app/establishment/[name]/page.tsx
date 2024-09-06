@@ -11,6 +11,8 @@ import { notFound } from "next/navigation"
 import { getEstablishment } from "@/app/_actions/get-establishment"
 import { generateEstablishmentMetadata } from "@/app/_utils/generateMetada"
 import SocialMedia from "@/app/_components/socialMedia"
+import { getUserBookings } from "@/app/_actions/get-user-bookings"
+import BookingItem from "@/app/_components/booking-item"
 
 type Props = {
   params: {
@@ -24,11 +26,13 @@ export async function generateMetadata({ params }: Props) {
 
 const Establishment = async ({ params }: any) => {
   const establishment = await getEstablishment({ subdomain: params.name })
-  console.log(establishment)
 
   if (!establishment) return notFound()
 
   const session = await getServerSession(authOptions)
+  // console.log(session)
+
+  const bookings = await getUserBookings({ userId: session?.user as string })
 
   return (
     <div>
@@ -71,6 +75,18 @@ const Establishment = async ({ params }: any) => {
           <StarIcon className="fill-primary text-primary" size={18} />
           <p className="text-sm">4.9 (10 avaliações)</p>
         </div>
+      </div>
+
+      {/* AGENDAMENTOS */}
+      {bookings.length > 0 && (
+        <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          Agendamentos
+        </h2>
+      )}
+      <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
+        {bookings.map((booking) => (
+          <BookingItem key={booking.id} booking={booking} />
+        ))}
       </div>
 
       {/* SERVICOS */}
