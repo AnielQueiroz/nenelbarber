@@ -20,6 +20,11 @@ const SidebarSheet = () => {
 
     // Construir nova url
     const bookingUrl = `${currentUrl}/bookings`
+
+    // Impedir caso ja esteja na url
+    if (bookingUrl === currentUrl) return
+
+    // Redirecionar
     router.push(bookingUrl)
   }
 
