@@ -35,6 +35,7 @@ const Establishment = async ({ params }: any) => {
   const bookings = await getUserBookings({
     userId: (session?.user as any)?.id,
     domain: params.name,
+    uuid: establishment.id,
   })
 
   return (

@@ -6,11 +6,13 @@ import { db } from "../_lib/prisma"
 interface GetUserBookingsProps {
   userId: string
   domain: string
+  uuid: string
 }
 
 export const getUserBookings = async ({
   userId,
   domain,
+  uuid,
 }: GetUserBookingsProps) => {
   if (!userId) return []
 
@@ -18,18 +20,23 @@ export const getUserBookings = async ({
     where: {
       userId: userId,
       date: {
-        gte: new Date(),
+        gte: new Date(), // Filtrar bookings futuros
+      },
+      service: {
+        barbershop: {
+          id: uuid, // Filtrando pela UUID da barbershop
+        },
       },
     },
     include: {
       service: {
         include: {
-          barbershop: true,
+          barbershop: true, // Incluir informações da barbershop associada
         },
       },
     },
     orderBy: {
-      date: "asc",
+      date: "asc", // Ordenar pelos bookings mais próximos
     },
   })
 
