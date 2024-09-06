@@ -83,7 +83,7 @@ const Establishment = async ({ params }: any) => {
       {/* AGENDAMENTOS */}
       {bookings.length > 0 && (
         <div className="space-y-3 border-b border-solid p-5">
-          <h2 className="mb-3 mt-6 text-xs font-bold uppercase text-gray-400">
+          <h2 className="mb-3 text-xs font-bold uppercase text-gray-400">
             Agendamentos
           </h2>
           <div className="flex gap-3 overflow-x-auto [&::-webkit-scrollbar]:hidden">
