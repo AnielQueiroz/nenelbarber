@@ -12,6 +12,8 @@ export const getUserBookings = async ({
   userId,
   domain,
 }: GetUserBookingsProps) => {
+  if (!userId) return []
+
   const userBookings = await db.booking.findMany({
     where: {
       userId: userId,
