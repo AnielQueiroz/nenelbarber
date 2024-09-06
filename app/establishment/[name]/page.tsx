@@ -10,6 +10,7 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { getEstablishment } from "@/app/_actions/get-establishment"
 import { generateEstablishmentMetadata } from "@/app/_utils/generateMetada"
+import SocialMedia from "@/app/_components/socialMedia"
 
 type Props = {
   params: {
@@ -23,6 +24,7 @@ export async function generateMetadata({ params }: Props) {
 
 const Establishment = async ({ params }: any) => {
   const establishment = await getEstablishment({ subdomain: params.name })
+  console.log(establishment)
 
   if (!establishment) return notFound()
 
@@ -71,12 +73,6 @@ const Establishment = async ({ params }: any) => {
         </div>
       </div>
 
-      {/* DESCRICAO */}
-      <div className="space-y-2 border-b border-solid p-5">
-        <h2 className="text-xs font-bold uppercase text-gray-400">Sobre nós</h2>
-        <p className="text-justify text-sm">{establishment.description}</p>
-      </div>
-
       {/* SERVICOS */}
       <div className="space-y-3 border-b border-solid p-5">
         <h2 className="text-xs font-bold uppercase text-gray-400">Serviços</h2>
@@ -91,11 +87,22 @@ const Establishment = async ({ params }: any) => {
         </div>
       </div>
 
+      {/* DESCRICAO */}
+      <div className="space-y-2 border-b border-solid p-5">
+        <h2 className="text-xs font-bold uppercase text-gray-400">Sobre nós</h2>
+        <p className="text-justify text-sm">{establishment.description}</p>
+      </div>
+
       {/* CONTATO */}
       <div className="space-y-3 p-5">
-        <h2 className="text-xs font-bold uppercase text-gray-400">Contato</h2>
+        <h2 className="text-xs font-bold uppercase text-gray-400">
+          Redes sociais
+        </h2>
         {establishment.phones.map((phone) => (
           <PhoneItem phone={phone} key={phone} />
+        ))}
+        {establishment.socialMedia.map((socialMedia) => (
+          <SocialMedia url={socialMedia} key={socialMedia} />
         ))}
       </div>
     </div>
